@@ -16,7 +16,7 @@ from os import path
 from random import shuffle
 
 
-def filter_list(sentence):
+def tokenize_sentence(sentence):
     sentence_blob = TextBlob(sentence)
     tokens = [word for word in sentence_blob.words if word != 'user']
     filtered_tokens = [token for token in tokens if re.match(r'[^\W\d]*$', token)]
@@ -25,23 +25,23 @@ def filter_list(sentence):
     return clean_tokens
 
 
-def normalize_sentence(sentence_list):
+def normalize_tokens(sentence_list):
     lem = WordNetLemmatizer()
     normalized_sentence = [lem.lemmatize(word, 'v') for word in sentence_list]
 
     return normalized_sentence
 
 
-def process_data(sentence):
-    sentence_list = filter_list(sentence)
+def process_sentence(sentence):
+    sentence_list = tokenize_sentence(sentence)
 
-    return normalize_sentence(sentence_list)
+    return normalize_tokens(sentence_list)
 
 
 def process_file(file_name, label, lines):
     with open(file_name, 'r') as fd:
         for line in fd:
-            line = process_data(line)
+            line = process_sentence(line)
             line = ' '.join(line)
             line += ',' + str(label)
             lines.append(line)
