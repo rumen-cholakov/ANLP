@@ -71,7 +71,7 @@ def test_model(input_data):
     fixed_data_labels = labels[pandas.notnull(tweets)]
 
     sentence_train, sentence_test, label_train, label_test = train_test_split(
-        fixed_data_tweets, fixed_data_labels, test_size=0.25)
+        fixed_data_tweets, fixed_data_labels, test_size=0.1)
 
     pipeline = Pipeline([
         ('vectorizer', CountVectorizer()),
