@@ -1,29 +1,26 @@
 import pandas
 
-from textblob import TextBlob
 import re
+from textblob import TextBlob
 from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
-
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
-from sklearn.metrics import classification_report, accuracy_score
+from sklearn.metrics import classification_report
 
-from os import path
 import string
+from os import path
 from random import shuffle
 
 
 def filter_list(sentence):
     sentence_blob = TextBlob(sentence)
     tokens = [word for word in sentence_blob.words if word != 'user']
-    filtered_tokens = [
-        token for token in tokens if re.match(r'[^\W\d]*$', token)]
-    clean_tokens = [word for word in filtered_tokens if word.lower(
-    ) not in stopwords.words('english')]
+    filtered_tokens = [token for token in tokens if re.match(r'[^\W\d]*$', token)]
+    clean_tokens = [word for word in filtered_tokens if word.lower() not in stopwords.words('english')]
 
     return clean_tokens
 
@@ -66,6 +63,7 @@ def load_movie_data():
 
     return pandas.read_csv("data/movie.csv")
 
+
 def test_model(input_data):
     tweets = input_data['tweet']
     labels = input_data['label']
@@ -76,16 +74,14 @@ def test_model(input_data):
         fixed_data_tweets, fixed_data_labels, test_size=0.25)
 
     pipeline = Pipeline([
-        ('vectorization', CountVectorizer()),
+        ('vectorizer', CountVectorizer()),
         ('tfidf', TfidfTransformer()),
         ('classifier', MultinomialNB()),
     ])
 
     pipeline.fit(sentence_train, label_train)
     predictions = pipeline.predict(sentence_test)
-
-    print(classification_report(label_test, predictions))
-    print(accuracy_score(label_test, predictions))
+    print(classification_report(label_test, predictions, digits=4))
 
 
 movie_data = load_movie_data()
