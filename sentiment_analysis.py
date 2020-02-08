@@ -40,6 +40,7 @@ def process_data(sentence):
 
     return normalize_sentence(sentence_list)
 
+
 def process_file(file_name, label, lines):
     with open(file_name, 'r') as fd:
         for line in fd:
@@ -47,6 +48,7 @@ def process_file(file_name, label, lines):
             line = ' '.join(line)
             line += ',' + str(label)
             lines.append(line)
+
 
 def load_movie_data():
     if not path.exists("data/movie.csv"):
@@ -63,27 +65,6 @@ def load_movie_data():
                 out.write(line + "\n")
 
     return pandas.read_csv("data/movie.csv")
-
-
-def load_general_data():
-    if not path.exists("data/general.csv"):
-        lines = []
-        with open("data/raw-general.csv", 'r') as fd:
-            for line in fd:
-                label = line.split(',')[-1]
-                line = ','.join(line.split(',')[:-1])
-                line = process_data(line)
-                line = ' '.join(line)
-                line += ',' + str(label)
-                lines.append(line)
-
-        with open("./data/general.csv", "w+") as out:
-            out.write("tweet,label\n")
-            for line in lines:
-                out.write(line + "\n")
-
-    return pandas.read_csv("data/general.csv")
-
 
 def test_model(input_data):
     tweets = input_data['tweet']
@@ -108,7 +89,5 @@ def test_model(input_data):
 
 
 movie_data = load_movie_data()
-general_data = load_general_data()
 
 test_model(movie_data)
-test_model(general_data)
