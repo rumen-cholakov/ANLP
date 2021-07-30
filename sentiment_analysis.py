@@ -20,16 +20,16 @@ def tokenize_sentence(sentence):
     sentence_blob = TextBlob(sentence)
     tokens = [word for word in sentence_blob.words if word != 'user']
     filtered_tokens = [token for token in tokens if re.match(r'[^\W\d]*$', token)]
-    clean_tokens = [word for word in filtered_tokens if word.lower() not in stopwords.words('english')]
-
-    return clean_tokens
+    return [
+        word
+        for word in filtered_tokens
+        if word.lower() not in stopwords.words('english')
+    ]
 
 
 def normalize_tokens(sentence_list):
     lem = WordNetLemmatizer()
-    normalized_sentence = [lem.lemmatize(word, 'v') for word in sentence_list]
-
-    return normalized_sentence
+    return [lem.lemmatize(word, 'v') for word in sentence_list]
 
 
 def process_sentence(sentence):
